@@ -216,12 +216,10 @@ const Dashboard = () => {
               ))
             ) : (
               <tr>
-                <td
-                  colSpan={6}
-                  className="py-5 pt-10 flex justify-center text-contrast text-xl">
-                  <Link
+                <td colSpan={6}>
+                <Link
                     href="/dashboard/create-restaurant"
-                    className="flex items-center font-semibold gap-1 transition-all hover:opacity-90 hover:-translate-y-[2px]">
+                    className="flex items-center font-semibold gap-1 transition-all hover:opacity-90 hover:-translate-y-[2px] text-contrast  my-16 justify-center text-2xl">
                     <svg
                       viewBox="0 0 1024 1024"
                       fill="currentColor"
