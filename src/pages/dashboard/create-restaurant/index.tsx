@@ -48,6 +48,7 @@ const CreateRestaurant: NextPageWithLayout = () => {
             Name:{" "}
             <input
               type="text"
+              required
               className="border rounded-lg text-lg pl-2 py-1 focus:outline-contrast placeholder:italic placeholder:opacity-60 bg-bg_1"
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -58,6 +59,7 @@ const CreateRestaurant: NextPageWithLayout = () => {
             Location:{" "}
             <input
               type="text"
+              required
               className="border rounded-lg text-lg pl-2 py-1 focus:outline-contrast placeholder:italic placeholder:opacity-60 bg-bg_1"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
@@ -68,6 +70,7 @@ const CreateRestaurant: NextPageWithLayout = () => {
             Cuisine:{" "}
             <input
               type="text"
+              required
               className="border rounded-lg text-lg pl-2 py-1 focus:outline-contrast placeholder:italic placeholder:opacity-60 bg-bg_1"
               value={cuisine}
               onChange={(e) => setCuisine(e.target.value)}
