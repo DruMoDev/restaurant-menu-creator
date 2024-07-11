@@ -22,12 +22,12 @@ export default function Home() {
         <div className="flex mt-36 gap-20">
           <Link
             href="/login"
-            className="py-3 bg-contrast   font-bold text-3xl px-6 rounded hover:bg-opacity-80 transition-all text-white">
+            className="py-3 bg-contrast font-bold text-3xl px-6 rounded hover:bg-opacity-90 transition-all text-white">
             Log in
           </Link>
           <Link
             href="/signup"
-            className="py-3 bg-quinary font-bold  text-white text-3xl px-6 rounded hover:bg-opacity-80 transition-all">
+            className="py-3 bg-text_1 font-bold  text-white text-3xl px-6 rounded hover:bg-opacity-90 transition-all">
             Sign up
           </Link>
         </div>

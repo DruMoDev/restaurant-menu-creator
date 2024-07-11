@@ -64,7 +64,7 @@ const Login = () => {
             </div>
             <div className="flex items-center justify-between">
               <button
-                className="bg-contrast hover:bg-opacity-80 text-white font-bold text-2xl py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-all"
+                className="bg-contrast hover:bg-opacity-0 text-white font-bold text-2xl py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-all"
                 type="submit"
                 onClick={handleLogin}>
                 Log in

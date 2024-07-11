@@ -53,22 +53,28 @@ const Dashboard = () => {
   }, []);
 
   const handleDelete = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    const id = e.currentTarget.parentElement?.parentElement?.id;    
+    const id = e.currentTarget.parentElement?.parentElement?.id;
 
     try {
-      window.confirm("Are you sure you want to delete this restaurant?")
-      const { error } = await supabase.from("restaurants").delete().eq("id", id);
+      if (window.confirm("Are you sure you want to delete this restaurant?")) {
+        const { error } = await supabase
+          .from("restaurants")
+          .delete()
+          .eq("id", id);
 
-      if (error) {
-        console.error("Error deleting restaurant:", error.message);
-        return;
+        if (error) {
+          console.error("Error deleting restaurant:", error.message);
+          return;
+        }
+        setRestaurants(
+          restaurants.filter((restaurant) => restaurant.id !== id)
+        );
       }
-      setRestaurants(restaurants.filter((restaurant) => restaurant.id !== id));
     } catch (error) {
       console.error("Error deleting restaurant:", error);
       return;
     }
-  }
+  };
 
   return (
     <section className="flex flex-col">
