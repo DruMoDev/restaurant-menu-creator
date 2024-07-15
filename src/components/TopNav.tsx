@@ -7,10 +7,10 @@ const TopNav: React.FC<TopNavProps> = ({ firstItem, menu }) => {
   return (
     <nav className="absolute top-10 left-26 container xl:max-w-[1700px] flex justify-between">
       <div className="flex gap-2 font-semibold">
-        <p>{firstItem}</p>
+        <p className="capitalize">{firstItem}</p>
         {menu &&
           menu.map((item, index) => (
-            <p key={index}>
+            <p key={index} className="capitalize">
               {">"} {item}
             </p>
           ))}

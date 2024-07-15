@@ -1,5 +1,5 @@
 import { createClient } from "@/utils/supabase/client";
-import { ReactElement } from "react";
+import { ReactElement, useState } from "react";
 import LayoutAuthenticated from "@/components/LayoutAuthenticated";
 import Link from "next/link";
 import TopNav from "@/components/TopNav";
@@ -10,11 +10,12 @@ import deleteRestaurantById from "@/utils/functions/deleteRestaurantById";
 const Dashboard = () => {
   const supabase = createClient();
   const queryClient = useQueryClient();
+  const [statusMenu, setStatusMenu] = useState("all");
 
-  const { data: restaurants, isLoading } = useQuery({
+  const { data: restaurants } = useQuery({
     queryKey: ["restaurants"],
     queryFn: async () => {
-      const { data, error } = await supabase.from("restaurants").select("*");
+      const { data } = await supabase.from("restaurants").select("*");
       return data;
     },
   });
@@ -26,22 +27,52 @@ const Dashboard = () => {
     },
   });
 
+  const filteredRestaurants = restaurants?.filter((restaurant) => {
+    if (statusMenu === "all") return restaurant;
+    if (statusMenu === "active") return restaurant.status === "active";
+    if (statusMenu === "draft") return restaurant.status === "draft";
+    if (statusMenu === "archived") return restaurant.status === "archived";
+  });
+
   return (
     <section className="flex flex-col">
-      <TopNav firstItem="Dashboard" menu={["Restaurants", "All restaurants"]} />
+      <TopNav
+        firstItem="dashboard"
+        menu={["restaurants", statusMenu + " restaurants"]}
+      />
 
-      <div className="flex justify-between">
+      <nav className="flex justify-between">
         <ul className="flex bg-bg_2 gap-3 px-1 py-1 w-fit rounded-lg">
-          <button className="bg-transparent px-3 font-medium text-slate-500 cursor-pointer focus:bg-white focus:text-black rounded py-0.5">
+          <button
+            className={`bg-transparent px-3 font-medium text-slate-500 cursor-pointer rounded py-0.5 ${
+              statusMenu === "all" ? "bg-white text-black" : ""
+            }`}
+            value={"all"}
+            onClick={(e) => setStatusMenu(e.currentTarget.value)}>
             All
           </button>
-          <button className="bg-transparent px-3 font-medium text-slate-500 cursor-pointer focus:bg-white focus:text-black rounded py-0.5">
+          <button
+            className={`bg-transparent px-3 font-medium text-slate-500 cursor-pointer rounded py-0.5 ${
+              statusMenu === "active" ? "bg-white text-black" : ""
+            }`}
+            value={"active"}
+            onClick={(e) => setStatusMenu(e.currentTarget.value)}>
             Active
           </button>
-          <button className="bg-transparent px-3 font-medium text-slate-500 cursor-pointer focus:bg-white focus:text-black rounded py-0.5">
+          <button
+            className={`bg-transparent px-3 font-medium text-slate-500 cursor-pointer rounded py-0.5 ${
+              statusMenu === "draft" ? "bg-white text-black" : ""
+            }`}
+            value={"draft"}
+            onClick={(e) => setStatusMenu(e.currentTarget.value)}>
             Draft
           </button>
-          <button className="bg-transparent px-3 font-medium text-slate-500 cursor-pointer focus:bg-white focus:text-black rounded py-0.5">
+          <button
+            className={`bg-transparent px-3 font-medium text-slate-500 cursor-pointer rounded py-0.5 ${
+              statusMenu === "archived" ? "bg-white text-black" : ""
+            }`}
+            value={"archived"}
+            onClick={(e) => setStatusMenu(e.currentTarget.value)}>
             Archived
           </button>
         </ul>
@@ -88,9 +119,9 @@ const Dashboard = () => {
             Add Restaurant
           </Link>
         </div>
-      </div>
+      </nav>
 
-      <div className="bg-white w-full flex flex-col border shadow-md mt-2 py-6 px-7 rounded-lg">
+      <section className="bg-white w-full flex flex-col border shadow-md mt-2 py-6 px-7 rounded-lg">
         <h2 className="font-semibold text-3xl">Restaurants</h2>
         <p className="text-slate-500">
           Manage your restaurants menus and view their performance.
@@ -119,15 +150,17 @@ const Dashboard = () => {
               </th>
             </tr>
           </thead>
-          <tbody className="">
-            {restaurants && restaurants.length > 0 ? (
-              restaurants.map((restaurant) => (
+          <tbody>
+            {filteredRestaurants && filteredRestaurants.length > 0 ? (
+              filteredRestaurants.map((restaurant) => (
                 <tr id={restaurant.id} key={restaurant.id}>
                   <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200 capitalize">
                     {restaurant.name}
                   </td>
-                  <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200 capitalize">
-                    {restaurant.status}
+                  <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200 capitalize ">
+                    <p className="border w-fit rounded-full px-2 font-semibold">
+                      {restaurant.status}
+                    </p>
                   </td>
                   <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200 capitalize">
                     {restaurant.cuisine}
@@ -190,7 +223,7 @@ const Dashboard = () => {
             )}
           </tbody>
         </table>
-      </div>
+      </section>
     </section>
   );
 };
