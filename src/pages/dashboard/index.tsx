@@ -1,80 +1,30 @@
 import { createClient } from "@/utils/supabase/client";
-import { useRouter } from "next/router";
-import { ReactElement, useEffect, useState } from "react";
-import { User } from "@supabase/supabase-js";
-import SideNav from "@/components/SideNav";
+import { ReactElement } from "react";
 import LayoutAuthenticated from "@/components/LayoutAuthenticated";
 import Link from "next/link";
 import TopNav from "@/components/TopNav";
-import convertDate from "@/utils/convertDate";
-
-type Restaurant = {
-  id: string;
-  created_at: string;
-  user_id: string;
-  name: string;
-  location: string;
-  status: string;
-  cuisine: string;
-};
+import convertDate from "@/utils/functions/convertDate";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import deleteRestaurantById from "@/utils/functions/deleteRestaurantById";
 
 const Dashboard = () => {
-  const router = useRouter();
   const supabase = createClient();
+  const queryClient = useQueryClient();
 
-  const [user, setUser] = useState<User | null>(null);
-  const [restaurants, setRestaurants] = useState<Restaurant[]>([]);
+  const { data: restaurants, isLoading } = useQuery({
+    queryKey: ["restaurants"],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("restaurants").select("*");
+      return data;
+    },
+  });
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      const { data, error } = await supabase.auth.getUser();
-
-      if (error || !data.user) {
-        router.push("/login");
-        return;
-      }
-      setUser(data.user);
-    };
-
-    const fetchRestaurants = async () => {
-      const { data: restaurants, error } = await supabase
-        .from("restaurants")
-        .select("*");
-
-      if (error) {
-        console.error("Error fetching restaurants:", error.message);
-        return;
-      }
-      setRestaurants(restaurants || []);
-    };
-
-    fetchUser();
-    fetchRestaurants();
-  }, []);
-
-  const handleDelete = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    const id = e.currentTarget.parentElement?.parentElement?.id;
-
-    try {
-      if (window.confirm("Are you sure you want to delete this restaurant?")) {
-        const { error } = await supabase
-          .from("restaurants")
-          .delete()
-          .eq("id", id);
-
-        if (error) {
-          console.error("Error deleting restaurant:", error.message);
-          return;
-        }
-        setRestaurants(
-          restaurants.filter((restaurant) => restaurant.id !== id)
-        );
-      }
-    } catch (error) {
-      console.error("Error deleting restaurant:", error);
-      return;
-    }
-  };
+  const { mutateAsync } = useMutation({
+    mutationFn: deleteRestaurantById,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["restaurants"] });
+    },
+  });
 
   return (
     <section className="flex flex-col">
@@ -170,7 +120,7 @@ const Dashboard = () => {
             </tr>
           </thead>
           <tbody className="">
-            {restaurants.length > 0 ? (
+            {restaurants && restaurants.length > 0 ? (
               restaurants.map((restaurant) => (
                 <tr id={restaurant.id} key={restaurant.id}>
                   <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200 capitalize">
@@ -198,7 +148,9 @@ const Dashboard = () => {
                         <path d="M21 15.344l-2.121 2.121-3.172-3.172-1.414 1.414 3.172 3.172L15.344 21H21zM3 8.656l2.121-2.121 3.172 3.172 1.414-1.414-3.172-3.172L8.656 3H3zM21 3h-5.656l2.121 2.121-3.172 3.172 1.414 1.414 3.172-3.172L21 8.656zM3 21h5.656l-2.121-2.121 3.172-3.172-1.414-1.414-3.172 3.172L3 15.344z" />
                       </svg>
                     </button>
-                    <button className="text-red-600" onClick={handleDelete}>
+                    <button
+                      className="text-red-600"
+                      onClick={async () => await mutateAsync(restaurant.id)}>
                       <svg
                         fill="none"
                         stroke="currentColor"
@@ -217,7 +169,7 @@ const Dashboard = () => {
             ) : (
               <tr>
                 <td colSpan={6}>
-                <Link
+                  <Link
                     href="/dashboard/create-restaurant"
                     className="flex items-center font-semibold gap-1 transition-all hover:opacity-90 hover:-translate-y-[2px] text-contrast  my-16 justify-center text-2xl">
                     <svg
