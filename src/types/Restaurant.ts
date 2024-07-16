@@ -1,4 +1,4 @@
-type Restaurant = {
+type RestaurantType = {
   id: string;
   created_at: string;
   user_id: string;
@@ -6,6 +6,6 @@ type Restaurant = {
   location: string;
   status: string;
   cuisine: string;
-};
+} | null;
 
-export default Restaurant;
+export default RestaurantType;

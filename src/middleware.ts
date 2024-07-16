@@ -8,14 +8,30 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (user) {
-    if (request.nextUrl.pathname.startsWith("/dashboard")) {
-      console.log("Estamos en el dashboard");
-      return NextResponse.next();
-    }
-    console.log("Vamos para el dashboard");
+  const { pathname } = request.nextUrl;
+  
+  if (
+    user &&
+    (pathname.startsWith("/login") ||
+      pathname.startsWith("/signup") ||
+      pathname === "/")
+  ) {
+    console.log("Redirecting to dashboard");
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
+
+  if (
+    !user &&
+    !pathname.startsWith("/login") &&
+    !pathname.startsWith("/signup") &&
+    !pathname.startsWith("/")
+  ) {
+    console.log("Redirecting to login");
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
+
+  // Allow the request to proceed
+  return NextResponse.next();
 }
 
 export const config = {

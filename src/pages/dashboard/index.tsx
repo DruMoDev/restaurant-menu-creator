@@ -20,6 +20,16 @@ const Dashboard = () => {
     },
   });
 
+  const { data: user } = useQuery({
+    queryKey: ["user"],
+    queryFn: async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      return user;
+    },
+  });
+
   const { mutateAsync } = useMutation({
     mutationFn: deleteRestaurantById,
     onSuccess: () => {
@@ -44,32 +54,34 @@ const Dashboard = () => {
       <nav className="flex justify-between">
         <ul className="flex bg-bg_2 gap-3 px-1 py-1 w-fit rounded-lg">
           <button
-            className={`bg-transparent px-3 font-medium text-slate-500 cursor-pointer rounded py-0.5 ${
-              statusMenu === "all" ? "bg-white text-black" : ""
+            className={`bg-transparent px-3 font-medium  cursor-pointer rounded py-0.5 ${
+              statusMenu === "all" ? "bg-white text-black" : "text-slate-500"
             }`}
             value={"all"}
             onClick={(e) => setStatusMenu(e.currentTarget.value)}>
             All
           </button>
           <button
-            className={`bg-transparent px-3 font-medium text-slate-500 cursor-pointer rounded py-0.5 ${
-              statusMenu === "active" ? "bg-white text-black" : ""
+            className={`bg-transparent px-3 font-medium  cursor-pointer rounded py-0.5 ${
+              statusMenu === "active" ? "bg-white text-black" : "text-slate-500"
             }`}
             value={"active"}
             onClick={(e) => setStatusMenu(e.currentTarget.value)}>
             Active
           </button>
           <button
-            className={`bg-transparent px-3 font-medium text-slate-500 cursor-pointer rounded py-0.5 ${
-              statusMenu === "draft" ? "bg-white text-black" : ""
+            className={`bg-transparent px-3 font-medium  cursor-pointer rounded py-0.5 ${
+              statusMenu === "draft" ? "bg-white text-black" : "text-slate-500"
             }`}
             value={"draft"}
             onClick={(e) => setStatusMenu(e.currentTarget.value)}>
             Draft
           </button>
           <button
-            className={`bg-transparent px-3 font-medium text-slate-500 cursor-pointer rounded py-0.5 ${
-              statusMenu === "archived" ? "bg-white text-black" : ""
+            className={`bg-transparent px-3 font-medium  cursor-pointer rounded py-0.5 ${
+              statusMenu === "archived"
+                ? "bg-white text-black"
+                : "text-slate-500"
             }`}
             value={"archived"}
             onClick={(e) => setStatusMenu(e.currentTarget.value)}>
@@ -122,7 +134,7 @@ const Dashboard = () => {
       </nav>
 
       <section className="bg-white w-full flex flex-col border shadow-md mt-2 py-6 px-7 rounded-lg">
-        <h2 className="font-semibold text-3xl">Restaurants</h2>
+        <h2 className="font-semibold text-3xl">Restaurants {user?.email}</h2>
         <p className="text-slate-500">
           Manage your restaurants menus and view their performance.
         </p>
@@ -172,7 +184,9 @@ const Dashboard = () => {
                     {convertDate(restaurant.created_at)}
                   </td>
                   <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200 flex gap-6 justify-center">
-                    <button className="text-blue-500">
+                    <Link
+                      href={`/restaurants/${restaurant.id}`}
+                      className="text-blue-500">
                       <svg
                         viewBox="0 0 24 24"
                         fill="currentColor"
@@ -180,7 +194,7 @@ const Dashboard = () => {
                         width="1.4rem">
                         <path d="M21 15.344l-2.121 2.121-3.172-3.172-1.414 1.414 3.172 3.172L15.344 21H21zM3 8.656l2.121-2.121 3.172 3.172 1.414-1.414-3.172-3.172L8.656 3H3zM21 3h-5.656l2.121 2.121-3.172 3.172 1.414 1.414 3.172-3.172L21 8.656zM3 21h5.656l-2.121-2.121 3.172-3.172-1.414-1.414-3.172 3.172L3 15.344z" />
                       </svg>
-                    </button>
+                    </Link>
                     <button
                       className="text-red-600"
                       onClick={async () => await mutateAsync(restaurant.id)}>
