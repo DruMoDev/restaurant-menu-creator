@@ -1,5 +1,5 @@
 interface TopNavProps {
-  menu: string[];
+  menu: (string | undefined)[];
   firstItem: string;
   searchActive?: boolean;
 }

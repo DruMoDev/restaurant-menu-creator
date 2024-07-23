@@ -1,55 +1,108 @@
+import DishesList from "@/components/DishesList";
 import LayoutAuthenticated from "@/components/LayoutAuthenticated";
+import MenusList from "@/components/MenusList";
+import SectionsList from "@/components/SectionsList";
 import TopNav from "@/components/TopNav";
-import type RestaurantType from "@/types/Restaurant";
-import { createClient } from "@/utils/supabase/client";
+import DishType from "@/types/DishType";
+import SectionType from "@/types/SectionType";
+import fetchDishesById from "@/utils/functions/fetchDishesById";
+import fetchMenuById from "@/utils/functions/fetchMenuById";
+import fetchRestaurantById from "@/utils/functions/fetchRestaurantById";
+import fetchSectionById from "@/utils/functions/fetchSectionById";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
-import { ReactElement, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
+import { MoonLoader } from "react-spinners";
 
 const Restaurant = () => {
-  const supabase = createClient();
   const router = useRouter();
-  const id = router.query.id;
+  const id = router.query.id as string;
+  const [menusIds, setMenusIds] = useState<string[]>([]);
+  const [menuSelected, setMenuSelected] = useState<string | null>(null);
+  const [filteredSections, setFilteredSections] = useState<
+    SectionType[] | null
+  >(null);
+  const [sectionSelected, setSectionSelected] = useState<string | null>(null);
+  const [sectionsIds, setSectionsIds] = useState<string[]>([]);
+  const [filteredDishes, setFilteredDishes] = useState<DishType[] | null>(null);
 
-  const [currentRestaurant, setCurrentRestaurant] =
-    useState<RestaurantType>(null);
-
-  const { data, isLoading } = useQuery({
-    queryKey: ["restaurant"],
+  const {
+    data: { restaurant, menus, sections, dishes } = {},
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: [
+      "restaurant",
+      "menus",
+      "sections",
+      "dishes",
+      menusIds,
+      sectionsIds,
+      id,
+    ],
     queryFn: async () => {
-      const { data: restaurants } = await supabase
-        .from("restaurants")
-        .select("*")
-        .eq("id", id);
-      console.log(
-        "Llamada a la base de datos para el restaurante",
-        restaurants && restaurants[0].name
-      );
-
-      return restaurants && setCurrentRestaurant(restaurants[0]);
+      const restaurant = await fetchRestaurantById(id);
+      const menus = await fetchMenuById(id);
+      setMenusIds(menus?.map((menu) => menu.id) || []);
+      const sections = await fetchSectionById(menusIds);
+      setSectionsIds(sections?.map((section) => section.id) || []);
+      const dishes = await fetchDishesById(sectionsIds);
+      return { restaurant, menus, sections, dishes };
     },
   });
 
-  if (isLoading || !currentRestaurant) {
-    return <></>;
+  useEffect((): any => {
+    let filteredSections = sections?.filter(
+      (section) => section.menu_id === menuSelected
+    );
+    if (filteredSections) {
+      setFilteredSections(filteredSections);
+    }
+    let filteredDishes = dishes?.filter(
+      (dish) => dish.section_id === sectionSelected
+    );
+    if (filteredDishes) {
+      setFilteredDishes(filteredDishes);
+    }
+  }, [menuSelected, sections, sectionSelected]);
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-grow h-full justify-center items-center">
+        <MoonLoader color="#2563EB" loading={isLoading} size={150} />
+      </div>
+    );
+  }
+  if (restaurant === undefined) {
+    console.log("No restaurant found, redirecting to dashboard");
+    router.push("/dashboard");
+    return;
   }
 
   return (
     <>
       <TopNav
         firstItem="restaurants"
-        menu={["menu creator", currentRestaurant.name]}
+        menu={["menu creator", restaurant?.name]}
         searchActive={false}
       />
-
-      <section className="bg-white w-full flex flex-col border shadow-md mt-2 py-6 px-7 rounded-lg flex-grow">
-        <h2 className="font-semibold text-3xl"> {currentRestaurant.name}</h2>
-        <p className="text-slate-500 capitalize">
-            {currentRestaurant.location} - {currentRestaurant.cuisine} - {currentRestaurant.status}
-        </p>
-        
-
-      </section>
+      <div className="flex gap-10 flex-grow mb-10">
+        <MenusList
+          menus={menus}
+          setSectionSelected={setSectionSelected}
+          setMenuSelected={setMenuSelected}
+          menuSelected={menuSelected}
+        />
+        <SectionsList
+          filteredSections={filteredSections}
+          sectionSelected={sectionSelected}
+          setSectionSelected={setSectionSelected}
+        />
+        <DishesList
+          filteredDishes={filteredDishes}
+          menuSelected={menuSelected}
+        />
+      </div>
     </>
   );
 };

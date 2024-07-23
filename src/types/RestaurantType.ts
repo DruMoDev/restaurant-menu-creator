@@ -6,6 +6,6 @@ type RestaurantType = {
   location: string;
   status: string;
   cuisine: string;
-} | null;
+}
 
 export default RestaurantType;
