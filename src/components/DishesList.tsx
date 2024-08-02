@@ -7,7 +7,7 @@ interface DishesListProps {
 
 const DishesList = ({ filteredDishes, menuSelected }: DishesListProps) => {
   return (
-    <section className="bg-white flex flex-col border shadow-md mt-2 py-6 px-7 rounded-lg w-5/12">
+    <section className="bg-white flex flex-col border shadow-md py-6 px-7 rounded-lg w-5/12">
       <div className="flex justify-between border-b pb-3 mb-5">
         <h3 className="text-2xl font-medium">Dishes</h3>
         <button className="bg-contrast text-white px-4 font-medium py-2 rounded-lg">

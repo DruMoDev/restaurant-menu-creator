@@ -2,7 +2,6 @@ import { createClient } from "@/utils/supabase/client";
 import { Inter } from "next/font/google";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 

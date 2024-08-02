@@ -86,7 +86,7 @@ const Restaurant = () => {
         menu={["menu creator", restaurant?.name]}
         searchActive={false}
       />
-      <div className="flex gap-10 flex-grow mb-10">
+      <div className="flex gap-5 flex-grow mb-10">
         <MenusList
           menus={menus}
           setSectionSelected={setSectionSelected}

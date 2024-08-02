@@ -51,7 +51,7 @@ const Dashboard = () => {
         menu={["restaurants", statusMenu + " restaurants"]}
       />
 
-      <nav className="flex justify-between">
+      <nav className="flex justify-between mb-2">
         <ul className="flex bg-bg_2 gap-3 px-1 py-1 w-fit rounded-lg">
           <button
             className={`bg-transparent px-3 font-medium  cursor-pointer rounded py-0.5 ${
@@ -133,7 +133,7 @@ const Dashboard = () => {
         </div>
       </nav>
 
-      <section className="bg-white w-full flex flex-col border shadow-md mt-2 py-6 px-7 rounded-lg">
+      <section className="bg-white w-full flex flex-col border shadow-md py-6 px-7 rounded-lg">
         <h2 className="font-semibold text-3xl">Restaurants {user?.email}</h2>
         <p className="text-slate-500">
           Manage your restaurants menus and view their performance.

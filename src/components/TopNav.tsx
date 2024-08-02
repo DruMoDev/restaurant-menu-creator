@@ -6,7 +6,7 @@ interface TopNavProps {
 
 const TopNav: React.FC<TopNavProps> = ({ firstItem, menu, searchActive = true }) => {
   return (
-    <nav className="absolute top-10 left-26 container xl:max-w-[1700px] flex justify-between">
+    <nav className="relative -top-10 container xl:max-w-[1700px] flex justify-between mx-auto">
       <div className="flex gap-2 font-semibold">
         <p className="capitalize">{firstItem}</p>
         {menu &&
@@ -21,7 +21,7 @@ const TopNav: React.FC<TopNavProps> = ({ firstItem, menu, searchActive = true })
           <input
             type="text"
             placeholder={`Search for restaurants...`}
-            className="border rounded-lg py-1 pl-7  w-full text-slate-700"></input>
+            className="border rounded-lg py-1 pl-7 w-full text-slate-700"></input>
           <svg
             className="absolute top-2 left-2"
             viewBox="0 0 1024 1024"

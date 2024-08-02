@@ -14,7 +14,7 @@ const MenusList = ({
   menuSelected,
 }: MenusListProps) => {
   return (
-    <section className="bg-white flex flex-col border shadow-md mt-2 py-6 px-7 rounded-lg w-3/12">
+    <section className="bg-white flex flex-col border shadow-md py-6 px-7 rounded-lg w-3/12">
       {/* <div className="border-b mb-4 pb-3">
             <h2 className="font-semibold text-3xl capitalize">
               {restaurant?.name}
