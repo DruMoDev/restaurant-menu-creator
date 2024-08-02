@@ -3,6 +3,8 @@
 @tailwind utilities;
 
 html {
-    color: #18181B;
-    background-color: #F9FBFD;
+  color: #18181b;
+  background-color: #f9fbfd;
+  font-family: "Roboto Slab", "Sevillana", "Roboto Mono", "Noto Sans JP",
+    sans-serif;
 }
