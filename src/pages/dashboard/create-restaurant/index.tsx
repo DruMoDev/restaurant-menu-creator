@@ -1,7 +1,7 @@
 import { NextPageWithLayout } from "@/pages/_app";
 import { ReactElement, useState } from "react";
 import LayoutAuthenticated from "../../../components/LayoutAuthenticated";
-import TopNav from "@/components/TopNav";
+import TopNav from "@/components/navs/TopNav";
 import Link from "next/link";
 import createRestaurant from "@/utils/functions/createRestaurant";
 

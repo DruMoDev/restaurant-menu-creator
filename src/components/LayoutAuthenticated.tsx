@@ -1,5 +1,5 @@
 import { ReactElement } from "react";
-import SideNav from "./SideNav";
+import SideNav from "./navs/SideNav";
 
 const LayoutAuthenticated = ({ children }: any): ReactElement => {
   return (
