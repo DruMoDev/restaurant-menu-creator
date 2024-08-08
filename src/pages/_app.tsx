@@ -14,14 +14,18 @@ type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
 };
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient();
 
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
   const getLayout = Component.getLayout ?? ((page) => page);
 
   return getLayout(
     <QueryClientProvider client={queryClient}>
-      <ToastContainer />
+      <ToastContainer
+        closeOnClick
+        pauseOnFocusLoss={false}
+        pauseOnHover={false}
+      />
       <Component {...pageProps} />
     </QueryClientProvider>
   );
