@@ -6,19 +6,24 @@ import RestaurantsDashboardNav from "@/components/navs/RestaurantsDashboardNav";
 import { NextPageWithLayout } from "../_app";
 
 const Dashboard: NextPageWithLayout = () => {
-  const [statusMenu, setStatusMenu] = useState("all");
+  const [sortParam, setSortParam] = useState({
+    searchQuery: "",
+    statusMenu: "all",
+  });
 
   return (
     <section className="flex flex-col">
       <TopNav
         firstItem="dashboard"
-        menu={["restaurants", statusMenu + " restaurants"]}
+        menu={["restaurants", sortParam.statusMenu + " restaurants"]}
+        sortParam={sortParam}
+        setSortParam={setSortParam}
       />
       <RestaurantsDashboardNav
-        setStatusMenu={setStatusMenu}
-        statusMenu={statusMenu}
+        sortParam={sortParam}
+        setSortParam={setSortParam}
       />
-      <RestaurantsList statusMenu={statusMenu} />
+      <RestaurantsList sortParam={sortParam} />
     </section>
   );
 };

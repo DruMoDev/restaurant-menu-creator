@@ -1,10 +1,25 @@
+import { Dispatch, SetStateAction } from "react";
+
 interface TopNavProps {
   menu: (string | undefined)[];
   firstItem: string;
   searchActive?: boolean;
+  sortParam: { searchQuery: string; statusMenu: string };
+  setSortParam: Dispatch<
+    SetStateAction<{
+      searchQuery: string;
+      statusMenu: string;
+    }>
+  >;
 }
 
-const TopNav: React.FC<TopNavProps> = ({ firstItem, menu, searchActive = true }) => {
+const TopNav: React.FC<TopNavProps> = ({
+  firstItem,
+  menu,
+  searchActive = true,
+  sortParam,
+  setSortParam,
+}) => {
   return (
     <nav className="relative -top-10 container xl:max-w-[1700px] flex justify-between mx-auto">
       <div className="flex gap-2 font-semibold">
@@ -17,11 +32,18 @@ const TopNav: React.FC<TopNavProps> = ({ firstItem, menu, searchActive = true })
           ))}
       </div>
       {searchActive && (
-        <div className="relative w-[300px]">
+        <div className="relative w-[250px] flex gap-2">
           <input
-            type="text"
+            type={sortParam.searchQuery}
             placeholder={`Search for restaurants...`}
-            className="border rounded-lg py-1 pl-7 w-full text-slate-700"></input>
+            className="border rounded-lg py-1 pl-7 w-full text-slate-700"
+            onChange={(e) =>
+              setSortParam({
+                ...sortParam,
+                searchQuery: e.target.value,
+              })
+            }
+          />
           <svg
             className="absolute top-2 left-2"
             viewBox="0 0 1024 1024"

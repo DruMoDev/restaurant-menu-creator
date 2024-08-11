@@ -1,17 +1,22 @@
+import RestaurantType from "@/types/RestaurantType";
 import convertDate from "@/utils/functions/convertDate";
 import deleteRestaurantById from "@/utils/functions/deleteRestaurantById";
-import { createClient } from "@/utils/supabase/client";
+import fetchAllRestaurants from "@/utils/functions/fetchAllRestaurants";
+import fetchUser from "@/utils/functions/fetchUser";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { MoonLoader } from "react-spinners";
 
 interface RestaurantsListProps {
-  statusMenu: string;
+  sortParam: { searchQuery: string; statusMenu: string };
 }
 
-const RestaurantsList = ({ statusMenu }: RestaurantsListProps) => {
-  const supabase = createClient();
+const RestaurantsList = ({ sortParam }: RestaurantsListProps) => {
   const queryClient = useQueryClient();
+  const [sortedRestaurants, setSortedRestaurants] = useState<RestaurantType[]>(
+    []
+  );
 
   const {
     data: { restaurants, user } = {},
@@ -20,14 +25,8 @@ const RestaurantsList = ({ statusMenu }: RestaurantsListProps) => {
   } = useQuery({
     queryKey: ["dashboardData"],
     queryFn: async () => {
-      const [restaurantsResponse, userResponse] = await Promise.all([
-        supabase.from("restaurants").select("*"),
-        supabase.auth.getUser(),
-      ]);
-
-      const restaurants = restaurantsResponse.data;
-      const user = userResponse.data.user;
-
+      const restaurants = await fetchAllRestaurants();
+      const user = await fetchUser();
       return { restaurants, user };
     },
   });
@@ -39,12 +38,26 @@ const RestaurantsList = ({ statusMenu }: RestaurantsListProps) => {
     },
   });
 
-  const filteredRestaurants = restaurants?.filter((restaurant) => {
-    if (statusMenu === "all") return restaurant;
-    if (statusMenu === "active") return restaurant.status === "active";
-    if (statusMenu === "draft") return restaurant.status === "draft";
-    if (statusMenu === "archived") return restaurant.status === "archived";
-  });
+  useEffect(() => {
+    if (restaurants) {
+      const { searchQuery, statusMenu } = sortParam;
+
+      // Filtrar por statusMenu
+      let filteredRestaurants = restaurants.filter((restaurant) => {
+        if (statusMenu === "all") return true;
+        return restaurant.status === statusMenu;
+      });
+
+      // Filtrar por searchQuery si existe
+      if (searchQuery !== "") {
+        filteredRestaurants = filteredRestaurants.filter((restaurant) =>
+          restaurant.name.toLowerCase().startsWith(searchQuery.toLowerCase())
+        );
+      }
+
+      setSortedRestaurants([...filteredRestaurants]);
+    }
+  }, [restaurants, sortParam]);
 
   return (
     <section className="bg-white w-full flex flex-col border shadow-md py-6 px-7 rounded-lg">
@@ -86,8 +99,8 @@ const RestaurantsList = ({ statusMenu }: RestaurantsListProps) => {
             </tr>
           </thead>
           <tbody>
-            {filteredRestaurants && filteredRestaurants.length > 0 ? (
-              filteredRestaurants.map((restaurant) => (
+            {sortedRestaurants.length > 0 ? (
+              sortedRestaurants.map((restaurant) => (
                 <tr id={restaurant.id} key={restaurant.id}>
                   <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200 capitalize">
                     {restaurant.name}

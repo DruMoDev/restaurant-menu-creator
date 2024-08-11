@@ -3,47 +3,80 @@ import Link from "next/link";
 import { Dispatch, SetStateAction } from "react";
 
 interface RestaurantsDashboardNavProps {
-  statusMenu: string;
-  setStatusMenu: Dispatch<SetStateAction<string>>;
+  sortParam: { searchQuery: string; statusMenu: string };
+  setSortParam: Dispatch<
+    SetStateAction<{
+      searchQuery: string;
+      statusMenu: string;
+    }>
+  >;
 }
 
 const RestaurantsDashboardNav = ({
-  statusMenu,
-  setStatusMenu,
+  sortParam,
+  setSortParam,
 }: RestaurantsDashboardNavProps) => {
   return (
     <nav className="flex justify-between mb-2">
       <ul className="flex bg-bg_2 gap-3 px-1 py-1 w-fit rounded-lg">
         <button
           className={`bg-transparent px-3 font-medium  cursor-pointer rounded py-0.5 ${
-            statusMenu === "all" ? "bg-white text-black" : "text-slate-500"
+            sortParam.statusMenu === "all"
+              ? "bg-white text-black"
+              : "text-slate-500"
           }`}
           value={"all"}
-          onClick={(e) => setStatusMenu(e.currentTarget.value)}>
+          onClick={(e) =>
+            setSortParam({
+              ...sortParam,
+              statusMenu: e.currentTarget.value,
+            })
+          }>
           All
         </button>
         <button
           className={`bg-transparent px-3 font-medium  cursor-pointer rounded py-0.5 ${
-            statusMenu === "active" ? "bg-white text-black" : "text-slate-500"
+            sortParam.statusMenu === "active"
+              ? "bg-white text-black"
+              : "text-slate-500"
           }`}
           value={"active"}
-          onClick={(e) => setStatusMenu(e.currentTarget.value)}>
+          onClick={(e) =>
+            setSortParam({
+              ...sortParam,
+              statusMenu: e.currentTarget.value,
+            })
+          }>
           Active
         </button>
         <button
           className={`bg-transparent px-3 font-medium  cursor-pointer rounded py-0.5 ${
-            statusMenu === "draft" ? "bg-white text-black" : "text-slate-500"
+            sortParam.statusMenu === "draft"
+              ? "bg-white text-black"
+              : "text-slate-500"
           }`}
           value={"draft"}
-          onClick={(e) => setStatusMenu(e.currentTarget.value)}>
+          onClick={(e) =>
+            setSortParam({
+              ...sortParam,
+              statusMenu: e.currentTarget.value,
+            })
+          }>
           Draft
         </button>
         <button
           className={`bg-transparent px-3 font-medium  cursor-pointer rounded py-0.5 ${
-            statusMenu === "archived" ? "bg-white text-black" : "text-slate-500"
+            sortParam.statusMenu === "archived"
+              ? "bg-white text-black"
+              : "text-slate-500"
           }`}
           value={"archived"}
-          onClick={(e) => setStatusMenu(e.currentTarget.value)}>
+          onClick={(e) =>
+            setSortParam({
+              ...sortParam,
+              statusMenu: e.currentTarget.value,
+            })
+          }>
           Archived
         </button>
       </ul>
