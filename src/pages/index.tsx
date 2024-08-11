@@ -1,16 +1,8 @@
-import { createClient } from "@/utils/supabase/client";
-import { Inter } from "next/font/google";
 import Link from "next/link";
-import { useRouter } from "next/router";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
-  const supabase = createClient();
-  const router = useRouter();  
-  
   return (
-    <main className={`min-h-screen  bg-bg_1 ${inter.className}`}>
+    <main className={`min-h-screen  bg-bg_1 `}>
       <div className="flex flex-col items-center container xl:max-w-[1700px] mx-auto pt-24">
         <h1 className="text-5xl font-semibold flex flex-col items-center gap-3 text-quaternary">
           Welcome to:{" "}

@@ -3,8 +3,9 @@ import LayoutAuthenticated from "@/components/LayoutAuthenticated";
 import TopNav from "@/components/navs/TopNav";
 import RestaurantsList from "@/components/RestaurantsList";
 import RestaurantsDashboardNav from "@/components/navs/RestaurantsDashboardNav";
+import { NextPageWithLayout } from "../_app";
 
-const Dashboard = () => {
+const Dashboard: NextPageWithLayout = () => {
   const [statusMenu, setStatusMenu] = useState("all");
 
   return (
