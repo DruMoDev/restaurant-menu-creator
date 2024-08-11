@@ -4,8 +4,8 @@ interface TopNavProps {
   menu: (string | undefined)[];
   firstItem: string;
   searchActive?: boolean;
-  sortParam: { searchQuery: string; statusMenu: string };
-  setSortParam: Dispatch<
+  sortParam?: { searchQuery: string; statusMenu: string };
+  setSortParam?: Dispatch<
     SetStateAction<{
       searchQuery: string;
       statusMenu: string;
@@ -16,10 +16,11 @@ interface TopNavProps {
 const TopNav: React.FC<TopNavProps> = ({
   firstItem,
   menu,
-  searchActive = true,
-  sortParam,
-  setSortParam,
+  searchActive = false,
+  sortParam = { searchQuery: "", statusMenu: "all" },
+  setSortParam = () => {},
 }) => {
+  const { searchQuery } = sortParam;
   return (
     <nav className="relative -top-10 container xl:max-w-[1700px] flex justify-between mx-auto">
       <div className="flex gap-2 font-semibold">
@@ -34,7 +35,7 @@ const TopNav: React.FC<TopNavProps> = ({
       {searchActive && (
         <div className="relative w-[250px] flex gap-2">
           <input
-            type={sortParam.searchQuery}
+            type={searchQuery}
             placeholder={`Search for restaurants...`}
             className="border rounded-lg py-1 pl-7 w-full text-slate-700"
             onChange={(e) =>

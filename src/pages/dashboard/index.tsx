@@ -18,6 +18,7 @@ const Dashboard: NextPageWithLayout = () => {
         menu={["restaurants", sortParam.statusMenu + " restaurants"]}
         sortParam={sortParam}
         setSortParam={setSortParam}
+        searchActive={true}
       />
       <RestaurantsDashboardNav
         sortParam={sortParam}
