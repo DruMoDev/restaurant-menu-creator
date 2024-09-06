@@ -1,7 +1,7 @@
 import { ReactElement, useState } from "react";
 import LayoutAuthenticated from "@/components/LayoutAuthenticated";
 import TopNav from "@/components/navs/TopNav";
-import RestaurantsList from "@/components/RestaurantsList";
+import RestaurantsList from "@/components/restaurants/RestaurantsList";
 import RestaurantsDashboardNav from "@/components/navs/RestaurantsDashboardNav";
 import { NextPageWithLayout } from "../_app";
 
