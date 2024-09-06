@@ -16,17 +16,19 @@ const RestaurantsList = ({ sortParam }: Props) => {
     []
   );
 
+  // Always add all variables you use in query funtion, to the queryKey to avoid caching issues
   const {
-    data: { restaurants, user } = {},
-    isLoading,
-    error,
+    data: restaurants,
+    isLoading: restaurantsLoading,
+    error: restaurantsError,
   } = useQuery({
-    queryKey: ["dashboardData"],
-    queryFn: async () => {
-      const restaurants = await fetchAllRestaurants();
-      const user = await fetchUser();
-      return { restaurants, user };
-    },
+    queryKey: ["restaurants"],
+    queryFn: fetchAllRestaurants,
+  });
+
+  const { data: user } = useQuery({
+    queryKey: ["user"],
+    queryFn: fetchUser,
   });
 
   useEffect(() => {
@@ -59,12 +61,12 @@ const RestaurantsList = ({ sortParam }: Props) => {
         Manage your restaurants menus and view their performance.
       </p>
 
-      {isLoading ? (
+      {restaurantsLoading ? (
         <div className="flex flex-grow h-full justify-center items-center mt-5">
-          <MoonLoader color="#2563EB" loading={isLoading} size={150} />
+          <MoonLoader color="#2563EB" loading={restaurantsLoading} size={150} />
         </div>
-      ) : error ? (
-        <p>Error: {error.message}</p>
+      ) : restaurantsError ? (
+        <p>Error: {restaurantsError.message}</p>
       ) : (
         <table className="mt-10 border w-full">
           <thead className="border bg-bg_1">
