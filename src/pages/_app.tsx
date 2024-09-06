@@ -5,6 +5,8 @@ import type { AppProps } from "next/app";
 import { ReactNode } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: React.ReactElement) => ReactNode;
@@ -27,6 +29,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
         pauseOnHover={false}
       />
       <Component {...pageProps} />
+      <ReactQueryDevtools initialIsOpen={false} buttonPosition="top-right"/>
     </QueryClientProvider>
   );
 }

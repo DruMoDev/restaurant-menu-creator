@@ -16,14 +16,15 @@ const SignUp = () => {
       password: password,
     });
 
-    //El error de supabaseSignUp no funciona, y he creado una condición para que si el email ya existe, muestre un mensaje de error
-    if (data.user?.user_metadata.email_verified === undefined) {
-      toast.error("User already exists, please log in or verify your email");
-      return;
-    }
+    
     if (error) {
       console.error("Error signing up:", error.message);
       toast.error(error.message);
+      return;
+    }
+    //El error de supabaseSignUp no funciona, y he creado una condición para que si el email ya existe, muestre un mensaje de error
+    if (data.user?.user_metadata.email_verified === undefined) {
+      toast.error("User already exists, please log in or verify your email");
       return;
     }
 
