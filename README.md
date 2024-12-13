@@ -10,8 +10,14 @@ This is a web application built with Next.js, TypeScript, and Supabase that allo
 - Responsive design for optimal viewing on different devices.
 
 ## Usage
+### Test Account
 
-1. Sign up or log in to your restaurant account.
+For testing purposes, you can use the following account credentials instead of registering:
+
+- **Email:** prueba@gmail.com
+- **Password:** 123456
+
+1. Sign up or log in to your restaurant account. 
 2. Create a new menu by providing a name and description.
 3. Add categories to the menu by specifying a name and optional description.
 4. Within each category, add dishes by providing a name, description, and price.
